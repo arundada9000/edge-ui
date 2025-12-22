@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arun Neupane |Edge Precision Layout</title>
+    <style>
+        :root {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            color: white;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #050505;
+        }
+
+        .viewport {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y),
+                    rgba(0, 120, 212, 0.2) 0%,
+                    rgba(5, 5, 5, 1) 60%);
+            transition: background 0.2s ease;
+        }
+
+        .canvas {
+            position: absolute;
+            width: 150vw;
+            height: 150vh;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+
+        .img-card {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 1.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+            will-change: transform;
+            background: #111;
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-label {
+            height: 20%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Glassmorphism Center UI */
+        .ui-center {
+            position: relative;
+            z-index: 100;
+            text-align: center;
+            pointer-events: none;
+            padding: 40px 80px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 10px;
+            font-weight: 800;
+        }
+
+        p {
+            margin: 10px 0 0;
+            opacity: 0.6;
+            letter-spacing: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="viewport" id="viewport">
+        <div class="ui-center">
+            <h1>Arun Neupane</h1>
+            <p>@arundada9000 | Code with ease</p>
+            <!-- <h1>Sajilo Digital</h1>
+            <p>Your Vision, Our Innovation</p> -->
+        </div>
+        <div class="canvas" id="canvas"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const viewport = document.getElementById('viewport');
+
+        // Manual Coordinate mapping for 150vw x 150vh canvas
+        // (33% to 66% is the visible viewport area at start)
+        const manualConfigs = [
+            { label: "Jan", x: 20, y: 50, speed: 1.2 },
+            { label: "Feb", x: 10, y: 100, speed: 3.0 },
+            { label: "Mar", x: 80, y: 20, speed: 3.0 },
+            { label: "Apr", x: 35, y: 20, speed: 6.0 },
+            { label: "May", x: 10, y: 10, speed: 1.8 },
+            { label: "Jun", x: 30, y: 80, speed: 2.5 },
+            { label: "Jul", x: 55, y: 75, speed: 4.5 },
+            { label: "Aug", x: 85, y: 80, speed: 3.5 },
+            { label: "Sep", x: 105, y: 35, speed: 6.0 },
+            { label: "Oct", x: 55, y: 10, speed: 6.0 },
+            { label: "Nov", x: 80, y: 110, speed: 3.0 },
+            { label: "Dec", x: 75, y: 50, speed: 5.0 },
+            { label: "Feb1", x: 50, y: 0, speed: 2.0 },
+            { label: "Jan1", x: 50, y: 100, speed: 2.0 },
+            { label: "Mar1", x: 90, y: 10, speed: 1.0 }
+
+        ];
+
+        const cards = manualConfigs.map((config, i) => {
+            const card = document.createElement('div');
+            card.className = 'img-card';
+            card.style.left = `${config.x}%`;
+            card.style.top = `${config.y}%`;
+            card.style.transform = 'translate(-50%, -50%)'; // Center cards on their coordinates
+
+            card.innerHTML = `
+                <img src="https://picsum.photos/seed/${i + 500}/400/300">
+                <div class="img-label">${config.label}</div>
+            `;
+            canvas.appendChild(card);
+            return { element: card, speed: config.speed };
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+
+            viewport.style.setProperty('--mouse-x', `${(x / window.innerWidth) * 100}%`);
+            viewport.style.setProperty('--mouse-y', `${(y / window.innerHeight) * 100}%`);
+
+            const mouseX = (x / window.innerWidth) - 0.5;
+            const mouseY = (y / window.innerHeight) - 0.5;
+
+            // Global Canvas window shift
+            const canvasMoveX = mouseX * -40;
+            const canvasMoveY = mouseY * -40;
+            canvas.style.transform = `translate(calc(-50% + ${canvasMoveX}vw), calc(-50% + ${canvasMoveY}vh))`;
+
+            // Individual Multi-Speed Parallax
+            cards.forEach(card => {
+                const moveX = mouseX * (card.speed * -140);
+                const moveY = mouseY * (card.speed * -140);
+                // Maintain the -50% centering while adding parallax offset
+                card.element.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+<!-- 
+
+You can connect with me or reach out through any of the platforms below:
+
+- **GitHub**: https://github.com/arundada9000
+- **Instagram**: https://www.instagram.com/arundada9000
+- **Facebook**: https://www.facebook.com/arundada9000
+- **YouTube**: https://www.youtube.com/@arundada9000
+- **WhatsApp**: +9779811420975
+
+╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗
+║╚╣║║║╚╣╚╣╔╣╔╣║╚╣═╣ 
+╠╗║╚╝║║╠╗║╚╣║║║║║═╣
+╚═╩══╩═╩═╩═╩╝╚╩═╩═╝
+
+⠀⠀⢀⣀⣠⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣄⣀⡀⠀⠀
+⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀
+⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀
+⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆
+⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠈⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⢈⣹⣿⣿⣿⣿⣿⣿⣿⡇
+⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇
+⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀
+⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀
+⠀⠀⠈⠉⠙⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠋⠉⠁⠀⠀
+
+-->
