@@ -72,6 +72,7 @@ Image cards move at different speeds based on their individual settings, creatin
 You can check out the project in action on YouTube. I will be uploading a video demonstrating the effects and the thought process behind the design.
 
 Original UI : https://www.microsoft.com/en-us/edge/update/year-in-review
+Video : https://youtu.be/G1WnzXANmtA
 
 ---
 
