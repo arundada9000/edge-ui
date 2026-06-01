@@ -1,4 +1,4 @@
-# Edge Year In Review | Precision Layout
+﻿# Edge Year In Review | Precision Layout
 
 ## Overview
 
@@ -8,7 +8,7 @@ The project features a **parallax background** with floating image cards that dy
 
 ### Inspiration
 
-- Inspired by Microsoft Edge – 2025 Year In Review UI
+- Inspired by Microsoft Edge - 2025 Year In Review UI
 
 - Recreated purely for learning, experimentation, and UI exploration
 
@@ -145,3 +145,8 @@ I’m always open to feedback, collaboration, and creative discussions.
 ⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀
 ⠀⠀⠈⠉⠙⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠋⠉⠁⠀⠀
 ```
+---
+
+## License
+
+This project is for educational and personal learning purposes only. Commercial use, public deployment, or any revenue-generating use requires explicit written permission from the author. See [LICENSE](LICENSE) for details.
